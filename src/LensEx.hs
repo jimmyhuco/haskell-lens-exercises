@@ -1,12 +1,12 @@
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE RankNTypes      #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module LensEx where
 
-import           Control.Lens
+import Control.Lens
 
-import           Control.Monad.State
-import           Data.List
+import Control.Monad.State
+import Data.List
 
 
 data Point = Point
@@ -101,10 +101,10 @@ prefixed prefix = prism' (prefix ++) (stripPrefix prefix)
 
 -- type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
 
--- outside 
+-- outside
 --   :: Prism s t a b -> Lens (t -> r) (s -> r) (b -> r) (a -> r)
 myEither :: (a -> c) -> (b -> c) -> Either a b -> c
-myEither f g 
+myEither f g
   = outside _Left .~ f
   $ outside _Right .~ g
   $ error "Impossible" -- There is no sensible default here.
@@ -115,7 +115,7 @@ myMaybe def f
     = outside _Just .~ f
     $ const def -- A default Maybe a -> b function.
 
-data SomeData = Foo Int 
+data SomeData = Foo Int
               | Bar Char
 
 -- Will create prisms named _Foo and _Bar
@@ -124,6 +124,6 @@ $(makePrisms ''SomeData)
 functionToOverride :: SomeData -> Int
 functionToOverride = const 5
 
--- If the arg is a Foo, return the contained int + 1 
+-- If the arg is a Foo, return the contained int + 1
 newFunction :: SomeData -> Int
 newFunction = functionToOverride & outside _Foo .~ succ
